@@ -10,7 +10,8 @@ RUN mkdir /root/.parallel && \
     touch /root/.parallel/will-cite
 
 # Install pip
-RUN curl https://bootstrap.pypa.io/get-pip.py | python
+#RUN curl https://bootstrap.pypa.io/get-pip.py | python
+RUN curl  https://bootstrap.pypa.io/pip/3.4/get-pip.py | python
 
 # Install grafanalib
 RUN pip install git+https://github.com/weaveworks/grafanalib@82556ddfbbd6134837d280a7999d35c45cc3c87e
