@@ -9,7 +9,10 @@ Weave Scope Verwendung ist keine Voraussetzung
     git clone https://github.com/minidok/m169.git
 oder wenn schon mal ausgeführt nur noch:
     git pull
-    
+
+Wechseln sie in das Verzeichnis m169
+    cd m169
+
 ### Branch im Repo umstellen
     git checkout BFSU-Microservices-Socks-shop
     cd microservices-demo
