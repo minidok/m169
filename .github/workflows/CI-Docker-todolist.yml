@@ -22,7 +22,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64,linux/arm64
-          context: ./todolist
-          file: ./todolist/Dockerfile
+          context: ./todo-list
+          file: ./todo-list/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/todolist:latest
