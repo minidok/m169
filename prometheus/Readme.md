@@ -19,6 +19,6 @@ Im Verzeichnis der Linux VM sind folgende Anpassungen in der Datei **daemon.json
 ### Anpassung ermöglicht die Abfrage der Daten aus der Docker Engine
     curl <ip_vmdebian>:9323/metrics
 
-### Starten Container aus Image prometheus  
+### Starten von Service prometheus  
     docker run -e DOCKER_HOST=192.168.106.129 -d -p 9090:9090 dominikreussbzu/prometheus
     Ist die richtige IP eingetragen??
