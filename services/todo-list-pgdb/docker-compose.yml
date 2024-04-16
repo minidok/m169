@@ -11,13 +11,13 @@ services:
   todo-web:
     image: dominikreussbzu/todolist
     ports:
-      - "8030:80"
+      - "80:80"
     environment:
       - Database:Provider=Postgres
     depends_on:
       - todo-db
     networks:
-      - app-net
+      - my-net
     secrets:
       - source: postgres-connection
         target: /app/config/secrets.json
