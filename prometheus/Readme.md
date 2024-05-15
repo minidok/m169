@@ -22,3 +22,9 @@ Im Verzeichnis der Linux VM sind folgende Anpassungen in der Datei **daemon.json
 ### Starten von Service prometheus  
     docker run -e DOCKER_HOST=192.168.106.129 -d -p 9090:9090 dominikreussbzu/prometheus
     Ist die richtige IP eingetragen??
+
+### Abfrage zu Containern
+    Verwenden sie folgende Expression: engine_daemon_container_states_containers
+    Ausgabe dieser Abfrage ist der Status aller Container auf ihrem Dockersystem.
+    
+    
