@@ -19,21 +19,7 @@ Wechseln sie in das Verzeichnis m169
     git checkout BFSU-Microservices-Socks-shop
     cd microservices-demo
 
-### Installation von Waeve Scope
-    sudo curl -L git.io/scope -o /usr/local/bin/scope
-    sudo chmod a+x /usr/local/bin/scope
-    scope launch
-Es wird ein Container gestartet und die URL angezeigt:
-
-````Scope probe started
-Weave Scope is listening at the following URL(s):
-  * http://172.22.0.1:4040/
-  * http://172.25.0.1:4040/
-  * http://172.20.0.1:4040/
-  * http://172.18.0.1:4040/
-  * http://172.19.0.1:4040/
-  * http://192.168.106.129:4040/
-````
+###
 
 ### Microservices starten "socks shop" 
     docker-compose -f ./deploy/docker-compose/docker-compose.yml up -d
