@@ -22,7 +22,7 @@ Wechseln sie in das Verzeichnis m169
 ###
 
 ### Microservices starten "socks shop" 
-    docker-compose -f ./deploy/docker-compose/docker-compose.yml up -d
+    docker compose -f ./deploy/docker-compose/docker-compose.yml up -d
 
 ### Monitoring Grafana
 #### Einmalige Anpassungen
@@ -31,7 +31,7 @@ Script berechtigen zur Ausführung:
     chmod +x ./deploy/docker-compose/grafana/import.sh
 Container erzeugen und einmalig mit JSON Konfigurtionen für Grafana-Dashboard versorgen
 
-    docker-compose \
+    docker compose \
     -f ./deploy/docker-compose/docker-compose.monitoring.yml \
     run \
     --entrypoint /opt/grafana-import-dashboards/import.sh \
@@ -42,11 +42,11 @@ In diesem Schritt wurden die Konfigurationen für das Dashboard und die Datenque
 Falls es einen Fehler gibt, löschen sie den Container Grafana nochmals und führen den vorherigen Schritt erneut aus.
 
 ### Grafana und Prometheus deployen
-    docker-compose -f ./deploy/docker-compose/docker-compose.monitoring.yml up -d
+    docker compose -f ./deploy/docker-compose/docker-compose.monitoring.yml up -d
 
 Prüfen sie, ob alle Services bereit sind:
 
-    docker-compose -f ./deploy/docker-compose/docker-compose.monitoring.yml ps
+    docker compose -f ./deploy/docker-compose/docker-compose.monitoring.yml ps
 
 #### URL und Ports
 Port | Service
@@ -70,4 +70,4 @@ Eve_Berger	|eve
 
 
 ### Cleaning up
-    docker-compose -f ./deploy/docker-compose/docker-compose.yml down
+    docker compose -f ./deploy/docker-compose/docker-compose.yml down
