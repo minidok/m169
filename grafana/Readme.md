@@ -18,7 +18,7 @@ Wechseln sie genau in dieses Verzeichnis.
 ### Services starten
 Sie befinden sich nun im Unterverzeichnis ./microservoces-demo und starten die Services für das Monitoring mit folgendem Kommando:
     
-    docker-compose -f ./deploy/docker-compose/docker-compose.monitoring.yml up -d
+    docker compose -f ./deploy/docker-compose/docker-compose.monitoring.yml up -d
 
 :+1: _Ausgabe markiert mit grünem "done", wenn die Services ok sind nach dem Start:_
 Creating network "docker-compose_default" with the default driver
@@ -34,7 +34,7 @@ Script berechtigen zur Ausführung:
     chmod +x ./deploy/docker-compose/grafana/import.sh
 Container erzeugen und einmalig mit JSON Konfigurtionen für Grafana-Dashboard versorgen
 
-    docker-compose \
+    docker compose \
     -f ./deploy/docker-compose/docker-compose.monitoring.yml \
     run \
     --entrypoint /opt/grafana-import-dashboards/import.sh \
