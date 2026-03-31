@@ -13,11 +13,11 @@ Folgendes Beispiel verwendet Schrift script und gibt den Text Heureka aus:
 
 	docker run --rm dominikreussbzu/displaytext -f script Heureka
 ``` 
->    __  __                     __ <br>
->   / / / /__  __  __________  / /______ _<br>
->  / /_/ / _ \/ / / / ___/ _ \/ //_/ __ `/<br>
-> / __  /  __/ /_/ / /  /  __/ ,< / /_/ /<br>
->/_/ /_/\___/\__,_/_/   \___/_/|_|\__,_/<br> 
-<br>
+    __  __                     __ 
+   / / / /__  __  __________  / /______ _
+  / /_/ / _ \/ / / / ___/ _ \/ //_/ __ `/
+ / __  /  __/ /_/ / /  /  __/ ,< / /_/ /
+/_/ /_/\___/\__,_/_/   \___/_/|_|\__,_/
+
 ```
 
