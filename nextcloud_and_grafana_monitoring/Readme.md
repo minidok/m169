@@ -7,7 +7,7 @@
 
 ## Systemübersicht
 
-![Architektur-Diagramm](./systemübersicht.svg)
+![Architektur-Diagramm](./systemuebersicht.svg)
 
 | Dienst | Image | Port | Aufgabe |
 |--------|-------|------|---------|
