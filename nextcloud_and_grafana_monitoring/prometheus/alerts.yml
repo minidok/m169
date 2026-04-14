@@ -1,0 +1,47 @@
+groups:
+  - name: nextcloud
+    rules:
+
+      - alert: NextcloudDown
+        expr: nextcloud_up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Nextcloud ist nicht erreichbar"
+          description: "Der nextcloud-exporter kann Nextcloud seit 2 Minuten nicht erreichen."
+
+      - alert: NextcloudDiskCritical
+        expr: nextcloud_free_space_bytes < 2 * 1024 * 1024 * 1024
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Nextcloud Speicher kritisch (< 2 GB frei)"
+          description: "Freier Speicher: {{ humanize $value }}"
+
+      - alert: NextcloudDiskWarning
+        expr: nextcloud_free_space_bytes < 20 * 1024 * 1024 * 1024 * 1024
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Nextcloud Speicher niedrig (< 2 TB frei)"
+          description: "Freier Speicher: {{ humanize $value }}"
+
+      - alert: HighCPULoad
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Hohe CPU-Last auf dem Host"
+          description: "CPU-Auslastung liegt bei {{ printf \"%.1f\" $value }}%"
+
+      - alert: TestAlert
+        expr: vector(1) == 1
+        for: 0m
+        labels:
+          severity: info
+        annotations:
+          summary: "Test-Alert funktioniert"

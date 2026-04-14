@@ -1,0 +1,175 @@
+# =============================================================
+#  Nextcloud + Monitoring Stack
+#  Dienste: Nextcloud, MariaDB, Redis, Prometheus,
+#           nextcloud-exporter, node-exporter, Grafana
+# =============================================================
+
+volumes:
+  nextcloud_data:
+  nextcloud_db:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  nextcloud_net:
+    driver: bridge
+  monitoring_net:
+    driver: bridge
+
+services:
+
+  # -----------------------------------------------------------
+  # Datenbank (MariaDB)
+  # -----------------------------------------------------------
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    networks:
+      - nextcloud_net
+    volumes:
+      - nextcloud_db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # -----------------------------------------------------------
+  # Redis (Session-Cache / File-Locking)
+  # -----------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - nextcloud_net
+    command: redis-server --save "" --loglevel warning
+
+  # -----------------------------------------------------------
+  # Nextcloud
+  # -----------------------------------------------------------
+  nextcloud:
+    image: nextcloud:29-apache
+    restart: unless-stopped
+    networks:
+      - nextcloud_net
+      - monitoring_net
+    ports:
+      - "8088:80"
+    volumes:
+      - nextcloud_data:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      # Datenbank
+      MYSQL_HOST: db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+
+      # Admin-Account (nur beim ersten Start)
+      NEXTCLOUD_ADMIN_USER: $NC_ADMIN_USER
+      NEXTCLOUD_ADMIN_PASSWORD: $NC_ADMIN_PASSWORD
+      NEXTCLOUD_TRUSTED_DOMAINS: $NC_TRUSTED_DOMAINS
+
+      # Redis
+      REDIS_HOST: redis
+      REDIS_HOST_PORT: 6379
+
+      # Monitoring-Token (für nextcloud-exporter)
+      # NC_METRICS_TOKEN: $NC_METRICS_TOKEN
+
+  # -----------------------------------------------------------
+  # Nextcloud Exporter (Prometheus-Adapter)
+  # Port: 9205
+  # -----------------------------------------------------------
+  nextcloud-exporter:
+    image: xperimental/nextcloud-exporter:latest
+    restart: unless-stopped
+    networks:
+      - nextcloud_net
+      - monitoring_net
+    depends_on:
+      - nextcloud
+    environment:
+      NEXTCLOUD_SERVER: "http://nextcloud"
+      #NEXTCLOUD_AUTH_TOKEN: $NC_METRICS_TOKEN
+      # Alternativ mit Username/Passwort:
+      NEXTCLOUD_USERNAME: ${NC_ADMIN_USER}
+      NEXTCLOUD_PASSWORD: ${NC_ADMIN_PASSWORD}
+    ports:
+      - "9205:9205"
+
+  # -----------------------------------------------------------
+  # Node Exporter (Host-Metriken: CPU, RAM, Disk)
+  # Port: 9100
+  # -----------------------------------------------------------
+  node-exporter:
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    networks:
+      - monitoring_net
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+
+  # -----------------------------------------------------------
+  # Prometheus
+  # Port: 9090
+  # -----------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    networks:
+      - monitoring_net
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+
+  # -----------------------------------------------------------
+  # Grafana
+  # Port: 3003
+  # -----------------------------------------------------------
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    networks:
+      - monitoring_net
+    ports:
+      - "3003:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    environment:
+      GF_SECURITY_ADMIN_USER: $GF_ADMIN_USER
+      GF_SECURITY_ADMIN_PASSWORD: $GF_ADMIN_PASSWORD
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SERVER_ROOT_URL: "http://localhost:3003"
+      # Automatisch Prometheus als Datasource laden
+      GF_DATASOURCES_DEFAULT_NAME: Prometheus
+    depends_on:
+      - prometheus
