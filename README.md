@@ -1,6 +1,6 @@
 # m169
 
-# Conainer mit Docker laufen lassen
+# Container mit Docker laufen lassen
 
 Docker holt sich das image aus dem repository und lässt den Webserver NGINX auf Port 8081 laufen.
 ```
