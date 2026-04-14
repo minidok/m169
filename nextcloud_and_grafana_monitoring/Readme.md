@@ -1,5 +1,4 @@
-# Nextcloud + Grafana Monitoring — Installationsanleitung
-
+# Nextcloud + Grafana Monitoring
 > **Modul:** M169 — Services mit Containern bereitstellen  
 > **Repository:** [github.com/minidok/m169](https://github.com/minidok/m169)
 
@@ -25,7 +24,7 @@
 
 Folgendes wird als bereits vorhanden angenommen:
 
-- Windows 11 mit installiertem Hypervisor (Hyper-V oder VirtualBox)
+- Windows 11 mit installiertem Hypervisor
 - Debian-VM läuft und ist per SSH erreichbar
 - Docker und Docker Compose sind auf der VM installiert
 
@@ -95,8 +94,6 @@ MYSQL_ROOT_PASSWORD=sicheres-root-passwort
 GF_ADMIN_USER=admin
 GF_ADMIN_PASSWORD=sicheres-grafana-passwort
 
-# Monitoring-Token (optional)
-NC_METRICS_TOKEN=secret-monitoring-token
 ```
 
 > **Wichtig:** Die Trusted Domains müssen die IP-Adresse der VM enthalten, damit der nextcloud-exporter Nextcloud erreichen kann. Mehrere Domains mit Leerzeichen trennen.
