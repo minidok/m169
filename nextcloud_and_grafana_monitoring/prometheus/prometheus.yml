@@ -19,3 +19,13 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
+
+- job_name: 'docker'
+  static_configs:
+    - targets: ['172.17.0.1:9323']  
+    # Docker bridge gateway = Host
+    # Setzt voraus: Konfiguration in /etc/docker/daemon.json
+    #{
+    #     "metrics-addr" : "0.0.0.0:9323"
+    #}
+    
