@@ -22,7 +22,7 @@ services:
   # Datenbank (MariaDB)
   # -----------------------------------------------------------
   db:
-    image: mariadb:11
+    image: mariadb:12
     restart: unless-stopped
     networks:
       - nextcloud_net
