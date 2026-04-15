@@ -53,7 +53,7 @@ services:
   # Nextcloud
   # -----------------------------------------------------------
   nextcloud:
-    image: nextcloud:29-apache
+    image: nextcloud:32-apache
     restart: unless-stopped
     networks:
       - nextcloud_net
